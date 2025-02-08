@@ -37,5 +37,11 @@ resource "aws_iam_user_policy" "ses_sender" {
 locals {
   # AWS SMTP credentials must be created from IAM credentials using a specific algorithm
   # This uses a predefined AWS endpoint - no need to change per region
-  smtp_password = base64encode(hmac("SHA256", "SendRawEmail", aws_iam_access_key.smtp_user.secret))
+  smtp_password = base64encode(
+    format(
+      "Message\n%s\nAWS4-HMAC-SHA256\n%s\n",
+      aws_iam_access_key.smtp_user.secret,
+      sha256("AWS4${aws_iam_access_key.smtp_user.secret}")
+    )
+  )
 }

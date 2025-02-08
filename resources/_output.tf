@@ -1,6 +1,7 @@
 output "smtp_username" {
   description = "SMTP username for Mastodon configuration"
   value       = aws_iam_access_key.smtp_user.id
+  sensitive   = true
 }
 
 output "smtp_password" {
